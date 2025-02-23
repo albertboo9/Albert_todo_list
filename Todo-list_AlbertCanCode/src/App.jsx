@@ -34,7 +34,7 @@ function App() {
     };
     fetchTodos();
     changeTheme(theme);
-  }, []);
+  }, [theme]);
 
   useEffect(() => {
     localStorage.setItem("savedTheme", theme);
