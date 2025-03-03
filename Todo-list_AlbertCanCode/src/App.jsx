@@ -53,17 +53,17 @@ function App() {
     setInput("");
   };
 
-  const deleteCheck = async (index, type) => {
-    const todo = todos[index];
+  const deleteCheck = async (id, type) => {
+    const todo = todos.find((todo) => todo.id === id);
     if (type === "delete") {
-      await axios.delete(`http://localhost:5000/todos/${todo.id}`);
-      const newTodos = todos.filter((_, i) => i !== index);
+      await axios.delete(`http://localhost:5000/todos/${id}`);
+      const newTodos = todos.filter((todo) => todo.id !== id);
       setTodos(newTodos);
     } else if (type === "check") {
       const updatedTodo = { ...todo, completed: !todo.completed };
-      await axios.put(`http://localhost:5000/todos/${todo.id}`, updatedTodo);
-      const newTodos = todos.map((todo, i) =>
-        i === index ? updatedTodo : todo
+      await axios.put(`http://localhost:5000/todos/${id}`, updatedTodo);
+      const newTodos = todos.map((todo) =>
+        todo.id === id ? updatedTodo : todo
       );
       setTodos(newTodos);
     }
@@ -165,9 +165,9 @@ function App() {
             <ul className="todo-list">
               {todos
                 .filter((todo) => todo.day === dayObj.name)
-                .map((todo, index) => (
+                .map((todo) => (
                   <div
-                    key={index}
+                    key={todo.id}
                     className={`todo ${theme}-todo ${
                       todo.completed ? "completed" : ""
                     }`}
@@ -181,13 +181,13 @@ function App() {
                     </li>
                     <button
                       className={`check-btn ${theme}-button`}
-                      onClick={() => deleteCheck(index, "check")}
+                      onClick={() => deleteCheck(todo.id, "check")}
                     >
                       <FontAwesomeIcon icon="check" />
                     </button>
                     <button
                       className={`delete-btn ${theme}-button`}
-                      onClick={() => deleteCheck(index, "delete")}
+                      onClick={() => deleteCheck(todo.id, "delete")}
                     >
                       <FontAwesomeIcon icon="trash" />
                     </button>
